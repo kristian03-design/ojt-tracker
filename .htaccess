@@ -1,0 +1,11 @@
+# redirect all requests to public folder if they don't already hit it
+RewriteEngine On
+
+# if request already contains /public/ or points to an existing file/dir, leave it alone
+RewriteCond %{REQUEST_URI} !/public/
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ public/$1 [L]
+
+# direct root to public
+RewriteRule ^$ public/ [L]
