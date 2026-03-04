@@ -1,0 +1,17 @@
+[phases.setup]
+nixPkgs = [
+	"php82",
+	"php82Packages.composer",
+	"php82Packages.pdo_mysql",
+	"php82Packages.mbstring",
+	"php82Packages.openssl",
+	"php82Packages.zip",
+]
+
+[phases.install]
+commands = [
+	"composer install --ignore-platform-reqs"
+]
+
+[start]
+cmd = "php -S 0.0.0.0:$PORT -t public"

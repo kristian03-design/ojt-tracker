@@ -1,6 +1,0 @@
-[phps]
-version = "8.2"
-withExtensions = ["pdo_mysql", "mbstring", "json", "openssl", "zip"]
-
-[build]
-install = ["composer install --ignore-platform-reqs"]
