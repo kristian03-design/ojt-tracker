@@ -8,12 +8,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'];
     $userModel = new User();
     $user = $userModel->findByEmail($email);
-    if ($user && password_verify($password, $user['password'])) {
-        $_SESSION['user'] = $user;
-        header('Location: index.php?p=dashboard');
-        exit;
+    if (!$user) {
+        $error_type = 'not_found';
+        $error = 'No account found with that email address.';
+    } elseif (!password_verify($password, $user['password'])) {
+        $error_type = 'wrong_password';
+        $error = 'Incorrect password. Please try again.';
     } else {
-        $error = 'Invalid email or password. Please try again.';
+        $success = true;
+        $_SESSION['user'] = $user;
+        // JS handles the redirect below so the success message is visible first
     }
 }
 
@@ -229,6 +233,23 @@ ob_start();
             align-items: center;
             gap: 8px;
         }
+        .error-box.not-found {
+            background: #fff8ed;
+            border-color: #f5d49a;
+            color: #7a4a0a;
+        }
+        .success-box {
+            background: #edfaf3;
+            border: 1px solid #a8e6c3;
+            border-radius: 8px;
+            padding: 11px 14px;
+            font-size: 13px;
+            color: #1a5c36;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
         .help-text { text-align: center; font-size: 12px; color: var(--ink-3); margin-top: 20px; }
         .help-text a { color: var(--amber); font-weight: 600; text-decoration: none; }
         .help-text a:hover { text-decoration: underline; }
@@ -274,10 +295,22 @@ ob_start();
                 <a href="index.php?p=register" class="tab">Register</a>
             </div>
 
-            <?php if (!empty($error)): ?>
-            <div class="error-box">
+            <?php if (!empty($success)): ?>
+            <div class="success-box">
+                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                Signed in successfully! Redirecting…
+            </div>
+            <?php elseif (!empty($error)): ?>
+            <div class="error-box <?php echo ($error_type === 'not_found') ? 'not-found' : ''; ?>">
+                <?php if ($error_type === 'not_found'): ?>
+                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <?php else: ?>
                 <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <?php endif; ?>
                 <?php echo htmlspecialchars($error); ?>
+                <?php if ($error_type === 'not_found'): ?>
+                <a href="index.php?p=register" style="margin-left:auto;color:var(--amber);font-weight:600;font-size:12px;white-space:nowrap;text-decoration:none;">Register →</a>
+                <?php endif; ?>
             </div>
             <?php endif; ?>
 
@@ -300,9 +333,13 @@ ob_start();
             <p class="help-text">Don't have an account? <a href="index.php?p=register">Create one →</a></p>
         </div>
     </div>
+<?php if (!empty($success)): ?>
+<script>setTimeout(() => { window.location.href = 'index.php?p=dashboard'; }, 1500);</script>
+<?php endif; ?>
 </body>
 </html>
 <?php
 // Bypass layout for login (it's a standalone page)
 echo ob_get_clean();
 exit;
+?>

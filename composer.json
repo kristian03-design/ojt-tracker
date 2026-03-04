@@ -1,0 +1,15 @@
+{
+  "name": "kristian03-design/ojt-tracker-backend",
+  "description": "REST API backend for OJT Hours Tracker",
+  "type": "project",
+  "require": {
+    "php": "^8.0",
+    "firebase/php-jwt": "^6.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "backend/app/",
+      "Config\\": "backend/config/"
+    }
+  }
+}

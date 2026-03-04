@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS users (
   role ENUM('student') DEFAULT 'student',
   required_hours INT DEFAULT 600,
   course VARCHAR(100) DEFAULT '',
+  department VARCHAR(255) DEFAULT '',
   photo VARCHAR(255) DEFAULT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
