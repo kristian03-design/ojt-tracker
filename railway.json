@@ -3,5 +3,9 @@
   "build": {
     "builder": "NIXPACKS"
   },
-  "startCommand": "php -S 0.0.0.0:$PORT -t public"
+  "deployCommand": "composer install --ignore-platform-reqs",
+  "startCommand": "php -S 0.0.0.0:$PORT -t public",
+  "env": {
+    "NIXPACKS_PHP_VERSION": "8.2"
+  }
 }
