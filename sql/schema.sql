@@ -1,4 +1,5 @@
 -- Database schema for OJT Tracker
+-- Dialect: MySQL 8.0+
 CREATE DATABASE IF NOT EXISTS ojt_tracker;
 USE ojt_tracker;
 
